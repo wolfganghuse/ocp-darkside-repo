@@ -1,0 +1,95 @@
+terraform{
+  required_providers{
+    nutanix = {
+      source = "nutanix/nutanix"
+      version = "1.3.0"
+    }
+  }
+}
+provider "nutanix" {
+  username  = "admin"
+  password  = "nx2Tech012!"
+  endpoint  = "10.38.63.39"
+  insecure  = true
+  port      = 9440
+}
+
+variable "source_image" {
+  type = string
+}
+
+data "nutanix_clusters" "clusters" {
+}
+
+locals {
+  cluster1 = data.nutanix_clusters.clusters.entities[1].metadata.uuid
+  vmname = "ds1x"
+  hostname = "ds-registry.dachlab.net"
+}
+
+
+
+### Subnet Data Sources
+data "nutanix_subnet" "primary" {
+  subnet_name = "Primary"
+}
+
+
+resource "nutanix_virtual_machine" "darkside" {
+  name                 = local.vmname
+  num_vcpus_per_socket = 4
+  num_sockets          = 1
+  memory_size_mib      = 8192
+
+  cluster_uuid = local.cluster1
+
+  nic_list {
+    subnet_uuid = data.nutanix_subnet.primary.id
+    ip_endpoint_list {
+      ip   = "10.38.63.15"
+      type = "ASSIGNED"
+    }
+  }
+
+  disk_list {
+    data_source_reference = {
+        kind = "image"
+        uuid = var.source_image
+      }
+  
+    device_properties {
+      disk_address = {
+        device_index = 0
+        adapter_type = "SCSI"
+      }
+
+      device_type = "DISK"
+    }
+  }
+
+  guest_customization_cloud_init_user_data = base64encode(templatefile("./cloud-config.tftpl", {
+    machine_name = local.hostname
+    ssh_key = file("~/.ssh/hpoc.pub")
+  }))
+
+  connection {
+    user     = "cloud-user"  
+    type     = "ssh"
+    host    = self.nic_list_status[0].ip_endpoint_list[0].ip
+  }
+
+  provisioner "file" {
+    source      = "cert"
+    destination = "."
+  }
+
+  provisioner "remote-exec" {
+    script = "darkside.sh"
+  }
+
+}
+
+# Show IP address
+output "ip_address" {
+  value = nutanix_virtual_machine.darkside.nic_list_status[0].ip_endpoint_list[0].ip
+}

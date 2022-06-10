@@ -1,0 +1,14 @@
+{
+  "builds": [
+    {
+      "name": "ocp_darkside",
+      "builder_type": "nutanix",
+      "build_time": 1654852360,
+      "files": null,
+      "artifact_id": "05e3e795-0880-4fc5-a6ec-0eced804767d",
+      "packer_run_uuid": "d33354b9-6578-a61b-8ada-5b4a45b2ec65",
+      "custom_data": null
+    }
+  ],
+  "last_run_uuid": "d33354b9-6578-a61b-8ada-5b4a45b2ec65"
+}
