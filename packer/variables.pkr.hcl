@@ -23,7 +23,7 @@ variable "nutanix_cluster" {
   type = string
 }
 
-variable "source_image" {
+variable "centos_image" {
   type = string
 }
 

@@ -7,14 +7,26 @@ terraform{
   }
 }
 provider "nutanix" {
-  username  = "admin"
-  password  = "nx2Tech012!"
-  endpoint  = "10.38.63.39"
+  username  = var.PC_USER
+  password  = var.PC_PASS
+  endpoint  = var.PC_ENDPOINT
   insecure  = true
   port      = 9440
 }
 
-variable "source_image" {
+variable "PC_PASS" {
+  type = string
+}
+
+variable "PC_USER" {
+  type = string
+}
+
+variable "PC_ENDPOINT" {
+  type = string
+}
+
+variable "packer_source_image" {
   type = string
 }
 
@@ -54,7 +66,7 @@ resource "nutanix_virtual_machine" "darkside" {
   disk_list {
     data_source_reference = {
         kind = "image"
-        uuid = var.source_image
+        uuid = var.packer_source_image
       }
   
     device_properties {

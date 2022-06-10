@@ -2,12 +2,12 @@ source "nutanix" "ocp_darkside" {
   nutanix_username = "${var.PC_USER}"
   nutanix_password = "${var.PC_PASS}"
   nutanix_endpoint = "${var.PC_ENDPOINT}"
-  nutanix_insecure = var.nutanix_insecure
+  nutanix_insecure = true
   cluster          = var.nutanix_cluster
   
   vm_disks {
       image_type = "ISO_IMAGE"
-      source_image_name = var.source_image
+      source_image_name = var.centos_image
   }
 
   vm_disks {
