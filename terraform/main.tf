@@ -14,6 +14,10 @@ provider "nutanix" {
   port      = 9440
 }
 
+variable "vm_ip" {
+  type = string
+}
+
 variable "PC_PASS" {
   type = string
 }
@@ -58,7 +62,7 @@ resource "nutanix_virtual_machine" "darkside" {
   nic_list {
     subnet_uuid = data.nutanix_subnet.primary.id
     ip_endpoint_list {
-      ip   = "10.38.63.15"
+      ip   = var.vm_ip
       type = "ASSIGNED"
     }
   }

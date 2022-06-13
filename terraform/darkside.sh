@@ -11,4 +11,4 @@ export REMOVABLE_MEDIA_PATH=/opt/ocp-darkside/mirror
 export LOCAL_REGISTRY=$(hostname)':8443' 
 export LOCAL_REPOSITORY='ocp4/openshift4'
 
-oc image mirror -a ${LOCAL_SECRET_JSON} --from-dir=${REMOVABLE_MEDIA_PATH} "file://openshift/release:*" ${LOCAL_REGISTRY}/${LOCAL_REPOSITORY}
+oc image mirror -a ${LOCAL_SECRET_JSON} --from-dir=${REMOVABLE_MEDIA_PATH} "file://openshift/release:4.11.0-0.nightly-2022-05-20-213928*" ${LOCAL_REGISTRY}/${LOCAL_REPOSITORY}
