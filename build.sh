@@ -1,16 +1,16 @@
 set -e
 
 export TF_VAR_nutanix_subnet="Primary"
-export TF_VAR_nutanix_cluster="PHX-SPOC009-4"
+export TF_VAR_nutanix_cluster="PHX-SPOC014-4"
 export TF_VAR_PC_USER=admin
 export TF_VAR_PC_PASS="nx2Tech012!"
-export TF_VAR_PC_ENDPOINT="10.38.9.201"
+export TF_VAR_PC_ENDPOINT="10.38.14.201"
 
 export PKR_VAR_PC_USER=admin
 export PKR_VAR_PC_PASS="nx2Tech012!"
-export PKR_VAR_PC_ENDPOINT="10.38.9.201"
+export PKR_VAR_PC_ENDPOINT="10.38.14.201"
 
-export TF_VAR_vm_ip="10.38.9.210"
+export TF_VAR_vm_ip="10.38.14.210"
 
 cd prepare
 terraform init
@@ -24,7 +24,7 @@ cd ../packer
 packer build .
 
 export TF_VAR_packer_source_image=$(jq -r '.builds[-1].artifact_id' manifest.json)
-cd ../terraform
+cd ../registry
 terraform init
 terraform apply
 

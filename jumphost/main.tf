@@ -35,15 +35,20 @@ variable "nutanix_subnet" {
   type = string
 }
 
-
-data "nutanix_clusters" "clusters" {
+variable "nutanix_cluster" {
+  type = string
 }
 
-locals {
-  cluster1 = data.nutanix_clusters.clusters.entities[1].metadata.uuid
+variable "packer_source_image" {
+  type = string
+}
+data "nutanix_subnet" "net" {
+  subnet_name = var.nutanix_subnet
 }
 
-
+data "nutanix_cluster" "cluster" {
+  name = var.nutanix_cluster
+}
 
 resource "nutanix_virtual_machine" "jumphost" {
   name                 = var.vm_name
@@ -51,14 +56,13 @@ resource "nutanix_virtual_machine" "jumphost" {
   num_sockets          = 1
   memory_size_mib      = 8192
 
-  cluster_uuid = local.cluster1
+  cluster_uuid = data.nutanix_cluster.cluster.id
 
   nic_list {
-    subnet_uuid = var.nutanix_subnet
+    subnet_uuid = data.nutanix_subnet.net.id
   }
 
   disk_list {
-    disk_size_mib   = 100000
     data_source_reference = {
         kind = "image"
         uuid = var.packer_source_image
@@ -80,7 +84,7 @@ resource "nutanix_virtual_machine" "jumphost" {
   }))
 
   connection {
-    user     = "centos"  
+    user     = "cloud-user"  
     type     = "ssh"
     host    = self.nic_list_status[0].ip_endpoint_list[0].ip
   }
@@ -100,7 +104,7 @@ resource "nutanix_virtual_machine" "jumphost" {
   
   provisioner "file" {
     source      = "files/kubectl"
-    destination = "."
+    destination = "./kubectl"
   }
   provisioner "remote-exec" {
     script = "files/prereq.sh"

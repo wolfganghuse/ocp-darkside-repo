@@ -12,10 +12,16 @@ export PKR_VAR_PC_USER=admin
 export PKR_VAR_PC_PASS="nx2Tech012!"
 export PKR_VAR_PC_ENDPOINT="10.38.9.201"
 
-cd terraform 
 export TF_VAR_packer_source_image=$(jq -r '.builds[-1].artifact_id' ../packer/manifest.json)
+
+cd jumphost
 terraform destroy -auto-approve
 cd ..
+
+cd registry 
+terraform destroy -auto-approve
+cd ..
+
 cd prepare
 terraform destroy -auto-approve
 cd ..

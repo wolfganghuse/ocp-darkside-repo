@@ -38,12 +38,20 @@ variable "nutanix_subnet" {
   type = string
 }
 
-data "nutanix_clusters" "clusters" {
+variable "nutanix_cluster" {
+  type = string
+}
+
+data "nutanix_cluster" "cluster" {
+  name = var.nutanix_cluster
+}
+
+data "nutanix_subnet" "net" {
+  subnet_name = var.nutanix_subnet
 }
 
 locals {
-  cluster1 = data.nutanix_clusters.clusters.entities[1].metadata.uuid
-  vmname = "ds1x"
+  vmname = "ds1"
   hostname = "ds-registry.dachlab.net"
 }
 
@@ -53,10 +61,10 @@ resource "nutanix_virtual_machine" "darkside" {
   num_sockets          = 1
   memory_size_mib      = 8192
 
-  cluster_uuid = local.cluster1
+  cluster_uuid = data.nutanix_cluster.cluster.id
 
   nic_list {
-    subnet_uuid = var.nutanix_subnet
+    subnet_uuid = data.nutanix_subnet.net.id
     ip_endpoint_list {
       ip   = var.vm_ip
       type = "ASSIGNED"
