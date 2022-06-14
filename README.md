@@ -1,3 +1,3 @@
-Darkside Repo
-Build with packer and terraform on Nutanix
-# ocp-darkside-repo
+# OpenShift Darkside Registry and complete IPI-Install
+
+Build with packer and terraform on Nutanix Infra
