@@ -15,10 +15,6 @@ provider "nutanix" {
   port      = 9440
 }
 
-variable "vm_name" {
-  type = string
-}
-
 variable "PC_PASS" {
   type = string
 }
@@ -42,6 +38,11 @@ variable "nutanix_cluster" {
 variable "packer_source_image" {
   type = string
 }
+
+variable "installer_name" {
+  type = string
+}
+
 data "nutanix_subnet" "net" {
   subnet_name = var.nutanix_subnet
 }
@@ -50,8 +51,8 @@ data "nutanix_cluster" "cluster" {
   name = var.nutanix_cluster
 }
 
-resource "nutanix_virtual_machine" "jumphost" {
-  name                 = var.vm_name
+resource "nutanix_virtual_machine" "installer" {
+  name                 = var.installer_name
   num_vcpus_per_socket = 4
   num_sockets          = 1
   memory_size_mib      = 8192
@@ -79,7 +80,7 @@ resource "nutanix_virtual_machine" "jumphost" {
   }
 
   guest_customization_cloud_init_user_data = base64encode(templatefile("./cloud-config.tftpl", {
-    machine_name = var.vm_name
+    machine_name = var.installer_name
     ssh_key = file("~/.ssh/hpoc.pub")
   }))
 
@@ -94,7 +95,7 @@ resource "nutanix_virtual_machine" "jumphost" {
     user = var.PC_USER
     password = var.PC_PASS
     })
-    destination = "./.nutanix/credentials"
+    destination = "./credentials"
   }
 
   provisioner "file" {
@@ -102,10 +103,6 @@ resource "nutanix_virtual_machine" "jumphost" {
     destination = "."
   }
   
-  provisioner "file" {
-    source      = "files/kubectl"
-    destination = "./kubectl"
-  }
   provisioner "remote-exec" {
     script = "files/prereq.sh"
   }
@@ -114,5 +111,5 @@ resource "nutanix_virtual_machine" "jumphost" {
 
 # Show IP address
 output "ip_address" {
-  value = nutanix_virtual_machine.jumphost.nic_list_status[0].ip_endpoint_list[0].ip
+  value = nutanix_virtual_machine.installer.nic_list_status[0].ip_endpoint_list[0].ip
 }

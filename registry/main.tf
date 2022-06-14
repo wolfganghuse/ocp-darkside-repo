@@ -14,7 +14,7 @@ provider "nutanix" {
   port      = 9440
 }
 
-variable "vm_ip" {
+variable "registry_ip" {
   type = string
 }
 
@@ -42,6 +42,14 @@ variable "nutanix_cluster" {
   type = string
 }
 
+variable "registry_fqdn" {
+  type = string
+}
+
+variable "registry_name" {
+  type = string
+}
+
 data "nutanix_cluster" "cluster" {
   name = var.nutanix_cluster
 }
@@ -50,13 +58,9 @@ data "nutanix_subnet" "net" {
   subnet_name = var.nutanix_subnet
 }
 
-locals {
-  vmname = "ds1"
-  hostname = "ds-registry.dachlab.net"
-}
 
-resource "nutanix_virtual_machine" "darkside" {
-  name                 = local.vmname
+resource "nutanix_virtual_machine" "registry" {
+  name                 = var.registry_name
   num_vcpus_per_socket = 4
   num_sockets          = 1
   memory_size_mib      = 8192
@@ -66,7 +70,7 @@ resource "nutanix_virtual_machine" "darkside" {
   nic_list {
     subnet_uuid = data.nutanix_subnet.net.id
     ip_endpoint_list {
-      ip   = var.vm_ip
+      ip   = var.registry_ip
       type = "ASSIGNED"
     }
   }
@@ -88,7 +92,7 @@ resource "nutanix_virtual_machine" "darkside" {
   }
 
   guest_customization_cloud_init_user_data = base64encode(templatefile("./cloud-config.tftpl", {
-    machine_name = local.hostname
+    machine_name = var.registry_fqdn
     ssh_key = file("~/.ssh/hpoc.pub")
   }))
 
@@ -104,12 +108,12 @@ resource "nutanix_virtual_machine" "darkside" {
   }
 
   provisioner "remote-exec" {
-    script = "files/darkside.sh"
+    script = "files/registry.sh"
   }
 
 }
 
 # Show IP address
 output "ip_address" {
-  value = nutanix_virtual_machine.darkside.nic_list_status[0].ip_endpoint_list[0].ip
+  value = nutanix_virtual_machine.registry.nic_list_status[0].ip_endpoint_list[0].ip
 }
