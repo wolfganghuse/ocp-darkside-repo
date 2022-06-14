@@ -34,6 +34,10 @@ variable "packer_source_image" {
   type = string
 }
 
+variable "nutanix_subnet" {
+  type = string
+}
+
 data "nutanix_clusters" "clusters" {
 }
 
@@ -42,14 +46,6 @@ locals {
   vmname = "ds1x"
   hostname = "ds-registry.dachlab.net"
 }
-
-
-
-### Subnet Data Sources
-data "nutanix_subnet" "primary" {
-  subnet_name = "Primary"
-}
-
 
 resource "nutanix_virtual_machine" "darkside" {
   name                 = local.vmname
@@ -60,7 +56,7 @@ resource "nutanix_virtual_machine" "darkside" {
   cluster_uuid = local.cluster1
 
   nic_list {
-    subnet_uuid = data.nutanix_subnet.primary.id
+    subnet_uuid = var.nutanix_subnet
     ip_endpoint_list {
       ip   = var.vm_ip
       type = "ASSIGNED"
@@ -100,7 +96,7 @@ resource "nutanix_virtual_machine" "darkside" {
   }
 
   provisioner "remote-exec" {
-    script = "darkside.sh"
+    script = "files/darkside.sh"
   }
 
 }
