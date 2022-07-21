@@ -15,18 +15,11 @@ variable "nutanix_insecure" {
   default = true
 }
 
-variable "nutanix_subnet" {
+variable "CLUSTER" {
   type = string
 }
 
-variable "nutanix_cluster" {
+variable "SUBNET" {
   type = string
 }
 
-variable "centos_image" {
-  type = string
-}
-
-variable "mirror_image" {
-  type = string
-}

@@ -3,11 +3,11 @@ source "nutanix" "ocp_darkside" {
   nutanix_password = "${var.PC_PASS}"
   nutanix_endpoint = "${var.PC_ENDPOINT}"
   nutanix_insecure = true
-  cluster_uuid     = var.nutanix_cluster
+  cluster_name     = "${var.CLUSTER}"
   
   vm_disks {
       image_type = "ISO_IMAGE"
-      source_image_uuid = var.centos_image
+      source_image_name = "CentOS-Stream-8-x86_64-202200719-dvd1.iso"
   }
 
   vm_disks {
@@ -17,11 +17,11 @@ source "nutanix" "ocp_darkside" {
 
   vm_disks {
       image_type = "ISO_IMAGE"
-      source_image_uuid = var.mirror_image
+      source_image_name = "mirror.iso"
   }
 
   vm_nics {
-    subnet_uuid      = var.nutanix_subnet
+    subnet_name      = "${var.SUBNET}"
   }
   
   cd_files         = ["scripts/stage1/ks.cfg"]

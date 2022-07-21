@@ -45,7 +45,7 @@ data "nutanix_subnet" "net" {
 
 resource "nutanix_image" "centos" {
   name        = "CentOS-Stream-8-x86_64-20220603-dvd1.iso"
-  source_uri  = "https://linux-mirrors.fnal.gov/linux/centos/8-stream/isos/x86_64/CentOS-Stream-8-x86_64-20220603-dvd1.iso"
+  source_uri  = "http://centos.mirror.iphh.net/CentOS/8-stream/isos/x86_64/CentOS-Stream-8-x86_64-20220712-dvd1.iso"
 }
 
 #data "nutanix_image" "centos" {

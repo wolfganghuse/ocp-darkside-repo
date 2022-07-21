@@ -1,7 +1,7 @@
 sudo cp cert/ca.crt /etc/pki/ca-trust/source/anchors/ca.crt
 sudo update-ca-trust
 
-sudo chown -R cloud-user /opt/ocp-darkside/mirror
+sudo chown -R centos /opt/ocp-darkside/mirror
 
 sudo /opt/ocp-darkside/mirror-registry/mirror-registry install --quayHostname $(hostname) --sslCert ~/cert/cert.crt --sslKey ~/cert/cert.key --initUser nutanix --initPassword 'nutanix/4u' --verbose
 echo '{"auths":{"'$(hostname)':8443": {"auth": "'$(echo -n 'nutanix':'nutanix/4u' | base64 -w0 )'","email": "you@example.com"}}}' > ps.json

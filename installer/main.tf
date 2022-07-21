@@ -85,7 +85,7 @@ resource "nutanix_virtual_machine" "installer" {
   }))
 
   connection {
-    user     = "cloud-user"  
+    user     = "centos"  
     type     = "ssh"
     host    = self.nic_list_status[0].ip_endpoint_list[0].ip
   }

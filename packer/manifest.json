@@ -3,21 +3,12 @@
     {
       "name": "ocp_darkside",
       "builder_type": "nutanix",
-      "build_time": 1655121020,
+      "build_time": 1658349544,
       "files": null,
-      "artifact_id": "93744c56-ef66-4639-b7ab-a463ee635086",
-      "packer_run_uuid": "e9182af3-568a-2df2-70e2-a7d82aef0749",
-      "custom_data": null
-    },
-    {
-      "name": "ocp_darkside",
-      "builder_type": "nutanix",
-      "build_time": 1655202555,
-      "files": null,
-      "artifact_id": "0dde2f02-182b-4abc-934a-4f46bccfb2ed",
-      "packer_run_uuid": "1d59b527-a1d6-da19-57f6-69fdb47921a6",
+      "artifact_id": "df7fb3e3-9043-4b81-be40-26c4278f827a",
+      "packer_run_uuid": "a55ae5b3-5e03-5ce4-dfaa-1e47d4221b14",
       "custom_data": null
     }
   ],
-  "last_run_uuid": "1d59b527-a1d6-da19-57f6-69fdb47921a6"
+  "last_run_uuid": "a55ae5b3-5e03-5ce4-dfaa-1e47d4221b14"
 }
